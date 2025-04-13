@@ -4,6 +4,15 @@ This CLI application generates **monthly water distribution sheets** in Excel fo
 
 ---
 
+## 🧱 Technologies
+- Node.js
+
+- TypeScript
+
+- xlsx package (SheetJS)
+
+- yargs package (CLI-parser)
+
 ## 🚀 Quick Start
 
 1. Clone the repository:
