@@ -40,3 +40,5 @@ next-env.d.ts
 
 /output-files/*
 /input-files/*
+
+dictionaryList.ts

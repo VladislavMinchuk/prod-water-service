@@ -1,8 +1,9 @@
 import * as XLSX from 'xlsx-js-style';
-import { defaultFont, leftCenterAlignHV, centerAlignVH, defaultBorderStyle, defultStyles, textRotation, waterConst, headerTitleCellAddress, documentNumberCellAddress, registNumberCellAddress, emptyCellSign } from '../consts';
+import { defaultFont, leftCenterAlignHV, centerAlignVH, defaultBorderStyle, defultStyles, textRotation, waterConst, headerTitleCellAddress, documentNumberCellAddress, registNumberCellAddress, emptyCellSign, locationCell } from '../consts';
 import { ICalcTotalWatePerDay, IDataCell, IPerson } from '../interface';
 import { parseToNum } from '../helpers';
 import { headerTitle } from './dictionary';
+import { getLocationName } from '../dictionary';
 
 export const getCellsArrFromRange = (worksheet: XLSX.WorkSheet, range: string): IDataCell[] => {
     const rangeRef = XLSX.utils.decode_range(range);
@@ -209,6 +210,11 @@ export const setDocumentNumber = (worksheet: XLSX.WorkSheet, numberValue: string
         ...worksheet[headerTitleCellAddress],
         v: headerTitle(numberValue)
     }
+};
+
+export const setLocationIntoFile = (worksheet: XLSX.WorkSheet, location: string): void => {
+    const name = getLocationName(location);
+    worksheet[locationCell] = { ...worksheet[locationCell], v: name || location }
 };
 
 export const fillEmptyCellsInRange = (worksheet: XLSX.WorkSheet, range: string): XLSX.WorkSheet => {

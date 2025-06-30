@@ -1,8 +1,8 @@
 import { utils, WorkBook, writeFile } from "xlsx-js-style";
 import path from "path";
-import { mainTotalWaterValueCell, mainTotalWaterValueCellHalfTempl, maxNameListLength, namesRange, outputFolder, outputTotalFileName, totalDayWaterRange, totalDayWaterRangeHalfTempl, waterValuesRange, waterValuesRangeHalfTempl } from "../consts";
+import { dateDoc, mainTotalWaterValueCell, mainTotalWaterValueCellHalfTempl, maxNameListLength, namesRange, outputFolder, outputTotalFileName, totalDayWaterRange, totalDayWaterRangeHalfTempl, waterValuesRange, waterValuesRangeHalfTempl } from "../consts";
 import { getSheetData } from "./import";
-import { calcTotalWaterPerDay, fillEmptyCellsInRange, insertDataIntoRange, setDailyWaterIntale, setDocumentNumber } from "./xlsHelpers";
+import { calcTotalWaterPerDay, fillEmptyCellsInRange, insertDataIntoRange, setDailyWaterIntale, setDocumentNumber, setLocationIntoFile } from "./xlsHelpers";
 import { IExportToExcelArgs, ITotalFile } from "../interface";
 import { parseToNum, reaplaceStringSymbol } from "../helpers";
 
@@ -26,13 +26,17 @@ export const exportListToExcel = ({ book, data, dateList, fileSuffix, documentNu
     let documentCounter = parseToNum(documentNumberStart);
     let totalCalcData: ITotalFile[] = [];
     
-    data.forEach((locationItem) => {
+    data.forEach((locationItem) => { // for each file
         const locationName = locationItem.name;
         const personList = locationItem.personList;
         const nameList = personList.map((i) => i.name);
         const excelFileCount = Math.ceil(nameList.length / maxNameListLength); // Round to bigger
+
+        setLocationIntoFile(sheet, locationName);
+        insertDataIntoRange(sheet, dateDoc, [`${dateList[0]?.value || ''}`]); // set document date by first 'dateList'
+        // dateList
         
-        for (let fileIndex = 0; fileIndex < excelFileCount; fileIndex++) {
+        for (let fileIndex = 0; fileIndex < excelFileCount; fileIndex++) { // for each row
             const slieStart = fileIndex * maxNameListLength;
             const slieEnd = (fileIndex+1) * maxNameListLength;
             const nameCells = insertDataIntoRange(sheet, namesRange, nameList.slice(slieStart, slieEnd));
